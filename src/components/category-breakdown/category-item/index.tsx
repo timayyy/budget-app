@@ -22,7 +22,7 @@ export function CategoryBreakdownItem({
       <HStack spacing="1rem" align="center">
         <Box bg={category.color.light} borderRadius="full">
           <CircularProgress
-            value={category.percentage}
+            value={Number(category.percentage.toFixed(1))}
             size="5rem"
             thickness="4px"
             color={category.color.main}

@@ -74,20 +74,25 @@ export function useToggleCreateBudgetModal() {
 
 export function useCreateBudget(formBudgetAmount: string | number) {
   const { dispatch } = useBudgetContext();
+  const { budgetAmount } = useBudget();
   const { showCategoryForm } = useUpdateCreateBudgetStep();
 
+  const userInputBudgetAmount = Number(formBudgetAmount);
+
   function createBudget() {
-    const newBudget = {
-      id: Math.floor(Math.random() * 100000000),
-      amount: Number(formBudgetAmount),
-    };
-
-    dispatch({
-      type: "create-budget",
-      payload: newBudget,
-    });
-
     showCategoryForm();
+
+    if (budgetAmount !== userInputBudgetAmount) {
+      const newBudget = {
+        id: Math.floor(Math.random() * 100000000),
+        amount: userInputBudgetAmount,
+      };
+
+      dispatch({
+        type: "create-budget",
+        payload: newBudget,
+      });
+    }
   }
 
   return { createBudget };

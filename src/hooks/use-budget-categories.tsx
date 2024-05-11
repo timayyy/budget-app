@@ -57,7 +57,7 @@ export function useAddCategory(selectedCategory: string, inputAmount: number) {
         const newCat = {
           ...selectedCategoryOption,
           amount: inputAmount.toString(),
-          percentage: categoryPercentage,
+          percentage: Number(categoryPercentage.toFixed(1)),
           id: Math.floor(Math.random() * 100000000),
         };
         dispatch({

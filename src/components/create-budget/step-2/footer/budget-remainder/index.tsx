@@ -6,7 +6,7 @@ export function BudgetRemainder() {
 
   return (
     <Text variant="body-2" color="brand.gray">
-      % of budget remaining : {percentageRemaining}%
+      % of budget remaining : {percentageRemaining.toFixed(1)}%
     </Text>
   );
 }

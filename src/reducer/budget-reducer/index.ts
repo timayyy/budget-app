@@ -43,8 +43,8 @@ export const budgetBookingReducer = (
         icon: x.icon,
         id: x.id,
         name: x.name,
-        percentage: Math.round(
-          (Number(x.amount) / Number(action.payload.amount)) * 100,
+        percentage: Number(
+          ((Number(x.amount) / Number(action.payload.amount)) * 100).toFixed(1),
         ),
         value: x.value,
       };
