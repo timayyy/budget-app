@@ -1,27 +1,30 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../context/budget-context";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { calculateTotalAmountSpent } from "../actions";
+import { useBudgetCategories } from "../../../hooks/use-budget-categories";
+import { useBudget, useTotalAmountSpent } from "../../../hooks/use-budget";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function CategoryOverview() {
-  const { state } = useBudgetContext();
+  const {
+    budgetCategoriesLightHexColors,
+    budgetCategoriesNames,
+    budgetCategoriesPercentages,
+    budgetCategoriesMainHexColors,
+  } = useBudgetCategories();
+
+  const { budgetAmount } = useBudget();
+  const { totalAmountSpent } = useTotalAmountSpent();
 
   // Chart Data
   const data = {
-    labels: state.budgetCategories.map((category) => category.name),
+    labels: budgetCategoriesNames,
     datasets: [
       {
-        // label: "# of Votes",
-        data: state.budgetCategories.map((category) => category.percentage),
-        backgroundColor: state.budgetCategories.map(
-          (category) => category.color.mainHex,
-        ),
-        borderColor: state.budgetCategories.map(
-          (category) => category.color.lightHex,
-        ),
+        data: budgetCategoriesPercentages,
+        backgroundColor: budgetCategoriesMainHexColors,
+        borderColor: budgetCategoriesLightHexColors,
         borderWidth: 1,
       },
     ],
@@ -52,13 +55,10 @@ export function CategoryOverview() {
           </Text>
           <Text align="center">
             <Text as={"span"} color="brand.darkBlue" variant="sub-heading-1">
-              ₦
-              {calculateTotalAmountSpent(
-                state.budgetCategories,
-              ).toLocaleString()}
+              ₦{totalAmountSpent.toLocaleString()}
             </Text>
             <Text as={"span"} color="brand.lightBlue4" variant="sub-heading-1">
-              /₦{state.budget?.amount.toLocaleString()}
+              /₦{budgetAmount.toLocaleString()}
             </Text>
           </Text>
         </Box>

@@ -1,24 +1,27 @@
 import { Box, FormControl, FormErrorMessage, Input } from "@chakra-ui/react";
+import { useBudget } from "../../../../hooks/use-budget";
 import { Dispatch, SetStateAction } from "react";
 
 type CreateBudgetFormProps = {
-  budgetAmount: string | number;
-  setBudgetAmount: Dispatch<SetStateAction<string | number>>;
+  formBudgetAmount: string | number;
+  setFormBudgetAmount: Dispatch<SetStateAction<string | number>>;
 };
 
 export function CreateBudgetForm({
-  budgetAmount,
-  setBudgetAmount,
+  formBudgetAmount,
+  setFormBudgetAmount,
 }: CreateBudgetFormProps) {
-  const maxBudget = 999999;
-  const isGreaterThanMax = Number(budgetAmount) > maxBudget;
+  const { maxBudgetAmount } = useBudget();
+
+  const isGreaterThanMax = Number(formBudgetAmount) > maxBudgetAmount;
+
   return (
     <Box>
       <FormControl isInvalid={isGreaterThanMax}>
         <Input
           type="number"
-          value={budgetAmount}
-          onChange={(e) => setBudgetAmount(e.target.value)}
+          value={formBudgetAmount}
+          onChange={(e) => setFormBudgetAmount(e.target.value)}
           variant="flushed"
           color="brand.main"
           fontSize="1.4rem"
@@ -34,7 +37,7 @@ export function CreateBudgetForm({
         />
         {isGreaterThanMax && (
           <FormErrorMessage>
-            You can't go higher than {maxBudget.toLocaleString()}!
+            You can't go higher than {maxBudgetAmount.toLocaleString()}!
           </FormErrorMessage>
         )}
       </FormControl>

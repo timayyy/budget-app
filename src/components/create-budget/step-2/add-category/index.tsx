@@ -1,53 +1,40 @@
 import { Box, Flex, IconButton, Spacer, Text } from "@chakra-ui/react";
 import { PlusIcon } from "../../../icons";
-import { calculatePercentage } from "../actions";
-import { CategoryOptionSingle } from "../../../../reducer/budget-reducer/types";
 import { Dispatch, SetStateAction } from "react";
-import { useBudgetContext } from "../../../../context/budget-context";
+import {
+  useAddCategory,
+  useBudgetCategories,
+} from "../../../../hooks/use-budget-categories";
+import { usePercentageUtil } from "../../../../hooks/use-percentage-util";
 
 type AddCategoryComponentProps = {
   amountValue: string;
   selectedCategory: string;
-  isMoreThanBudget: boolean;
-  totalBudgetAmount: number;
-  returnSelectedCategory: () => CategoryOptionSingle | undefined;
   setAmountValue: Dispatch<SetStateAction<string>>;
   setSelectedCategory: Dispatch<SetStateAction<string>>;
 };
 
 export function AddCategoryComponent({
   amountValue,
-  isMoreThanBudget,
-  returnSelectedCategory,
   selectedCategory,
   setAmountValue,
   setSelectedCategory,
-  totalBudgetAmount,
 }: AddCategoryComponentProps) {
-  const { state, dispatch } = useBudgetContext();
-
-  const disableBtn = !amountValue || !selectedCategory || isMoreThanBudget;
   const inputAmount = Number(amountValue);
 
-  function addNewCategory() {
-    if (amountValue && selectedCategory) {
-      const foundCat = returnSelectedCategory();
-      if (foundCat) {
-        const newCat = {
-          ...foundCat,
-          amount: amountValue,
-          percentage: calculatePercentage(inputAmount, totalBudgetAmount),
-          id: Math.floor(Math.random() * 100000000),
-        };
-        dispatch({
-          payload: newCat,
-          type: "add-category",
-        });
-      }
-      setAmountValue("");
-      setSelectedCategory("");
-    }
+  const { budgetCategoriesLength } = useBudgetCategories();
+  const { isMoreThanBudget, categoryPercentage } =
+    usePercentageUtil(inputAmount);
+  const { addNewCategory } = useAddCategory(selectedCategory, inputAmount);
+
+  const disableBtn = !amountValue || !selectedCategory || isMoreThanBudget;
+
+  function addNewBudgetCategory() {
+    addNewCategory();
+    setAmountValue("");
+    setSelectedCategory("");
   }
+
   return (
     <>
       {amountValue && selectedCategory ? (
@@ -57,8 +44,7 @@ export function AddCategoryComponent({
               variant="body-1"
               color={isMoreThanBudget ? "red" : "brand.darkBlue"}
             >
-              % of budget: {calculatePercentage(inputAmount, totalBudgetAmount)}
-              %
+              % of budget: {categoryPercentage.toFixed(1)}%
             </Text>
             <Spacer />{" "}
             <IconButton
@@ -68,11 +54,11 @@ export function AddCategoryComponent({
               icon={<PlusIcon height="1.2rem" width="1.2rem" />}
               size="lg"
               isDisabled={disableBtn}
-              onClick={addNewCategory}
+              onClick={addNewBudgetCategory}
             />
           </Flex>
         </Box>
-      ) : state.budgetCategories.length > 0 ? (
+      ) : budgetCategoriesLength > 0 ? (
         <Box mt="3rem">
           <Flex justifyContent="end">
             <IconButton
@@ -82,7 +68,7 @@ export function AddCategoryComponent({
               icon={<PlusIcon height="1.2rem" width="1.2rem" />}
               size="lg"
               isDisabled={disableBtn}
-              onClick={addNewCategory}
+              onClick={addNewBudgetCategory}
             />
           </Flex>
         </Box>

@@ -5,14 +5,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../context/budget-context";
-import {
-  calculateTotalAmountSpent,
-  calculateTotalPercentageUsed,
-} from "../actions";
+import { useBudget, useTotalAmountSpent } from "../../../hooks/use-budget";
+import { usePercentageRemaining } from "../../../hooks/use-percentage-util";
 
 export function Expenses() {
-  const { state } = useBudgetContext();
+  const { budgetAmount } = useBudget();
+  const { totalAmountSpent } = useTotalAmountSpent();
+  const { totalPercentage } = usePercentageRemaining();
+
   return (
     <Box>
       <VStack spacing="2.1rem">
@@ -26,7 +26,7 @@ export function Expenses() {
           borderStyle="solid"
         >
           <CircularProgress
-            value={calculateTotalPercentageUsed(state.budgetCategories)}
+            value={totalPercentage}
             size="13.2rem"
             trackColor="transparent"
             thickness="5px"
@@ -34,7 +34,7 @@ export function Expenses() {
           >
             <CircularProgressLabel>
               <Text color="brand.darkBlue" fontSize="3.6ren" fontWeight="700">
-                {calculateTotalPercentageUsed(state.budgetCategories)}%
+                {totalPercentage}%
               </Text>
             </CircularProgressLabel>
           </CircularProgress>
@@ -45,13 +45,10 @@ export function Expenses() {
           </Text>
           <Text align="center">
             <Text as={"span"} color="brand.darkBlue" variant="sub-heading-1">
-              ₦
-              {calculateTotalAmountSpent(
-                state.budgetCategories,
-              ).toLocaleString()}
+              ₦{totalAmountSpent.toLocaleString()}
             </Text>
             <Text as={"span"} color="brand.lightBlue4" variant="sub-heading-1">
-              /₦{state.budget?.amount.toLocaleString()}
+              /₦{budgetAmount.toLocaleString()}
             </Text>
           </Text>
         </Box>

@@ -15,28 +15,29 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { DownIcon } from "../../../icons";
-import { useBudgetContext } from "../../../../context/budget-context";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import type { CategoryOptionSingle } from "../../../../reducer/budget-reducer/types";
+import { usePercentageUtil } from "../../../../hooks/use-percentage-util";
+import { useBudgetCategoryOptions } from "../../../../hooks/use-budget-categories";
 
 type AddCategoryFormProps = {
   amountValue: string;
   selectedCategory: string;
-  isMoreThanBudget: boolean;
   handleAmountValueChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  returnSelectedCategory: () => CategoryOptionSingle | undefined;
   setSelectedCategory: Dispatch<SetStateAction<string>>;
 };
 
 export function AddCategoryForm({
   amountValue,
   handleAmountValueChange,
-  isMoreThanBudget,
-  returnSelectedCategory,
   selectedCategory,
   setSelectedCategory,
 }: AddCategoryFormProps) {
-  const { state } = useBudgetContext();
+  const inputAmount = Number(amountValue);
+
+  const { isMoreThanBudget } = usePercentageUtil(inputAmount);
+  const { budgetCategoryOptions, selectedCategoryOption } =
+    useBudgetCategoryOptions(selectedCategory);
+
   return (
     <VStack spacing="2rem" align="initial">
       <Box shadow="lg">
@@ -51,17 +52,17 @@ export function AddCategoryForm({
             h="4.4rem"
           >
             <Text variant="heading-2" color="brand.gray3">
-              {selectedCategory ? (
+              {selectedCategoryOption ? (
                 <Box>
                   <HStack spacing={"1rem"}>
                     <Circle
                       size="2.4rem"
-                      bg={returnSelectedCategory()?.color.light}
+                      bg={selectedCategoryOption.color.light}
                     >
-                      {returnSelectedCategory()?.icon}
+                      {selectedCategoryOption.icon}
                     </Circle>
                     <Text color="brand.main" variant="heading-2">
-                      {returnSelectedCategory()?.name}
+                      {selectedCategoryOption.name}
                     </Text>
                   </HStack>
                 </Box>
@@ -71,12 +72,12 @@ export function AddCategoryForm({
             </Text>
           </MenuButton>
           <MenuList w="100%">
-            {state.budgetCategoryOptions.length < 1 ? (
+            {budgetCategoryOptions.length < 1 ? (
               <Center w="100%" p="2rem">
                 <Text variant="heading-2">No options</Text>
               </Center>
             ) : (
-              state.budgetCategoryOptions.map((cat) => (
+              budgetCategoryOptions.map((cat) => (
                 <MenuItem
                   onClick={() => setSelectedCategory(cat.value)}
                   _hover={{ bg: cat.color.light }}

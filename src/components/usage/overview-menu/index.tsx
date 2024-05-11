@@ -9,12 +9,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Dots, NairaIcon } from "../../icons";
-import { useBudgetContext } from "../../../context/budget-context";
+import { useBudget } from "../../../hooks/use-budget";
+import { useOverview } from "../../../hooks/use-overview";
 
 export function OverviewMenu() {
-  const { state, dispatch } = useBudgetContext();
-
-  const isBudgetCreated = !!state.budget;
+  const { hasBudget } = useBudget();
+  const { showCategoriesOverview, showExpensesOverview } = useOverview();
 
   return (
     <Box>
@@ -25,7 +25,7 @@ export function OverviewMenu() {
           icon={<Dots />}
           colorScheme="transparent"
           size="lg"
-          isDisabled={!isBudgetCreated}
+          isDisabled={!hasBudget}
         />
         <MenuList>
           <MenuItem
@@ -34,12 +34,7 @@ export function OverviewMenu() {
                 <NairaIcon />
               </Circle>
             }
-            onClick={() =>
-              dispatch({
-                type: "show-overview",
-                payload: "expenses",
-              })
-            }
+            onClick={showExpensesOverview}
           >
             <Text variant="body-2">Expenses overview</Text>
           </MenuItem>
@@ -49,12 +44,7 @@ export function OverviewMenu() {
                 <NairaIcon />
               </Circle>
             }
-            onClick={() =>
-              dispatch({
-                type: "show-overview",
-                payload: "categories",
-              })
-            }
+            onClick={showCategoriesOverview}
           >
             <Text variant="body-2">Category overview</Text>
           </MenuItem>

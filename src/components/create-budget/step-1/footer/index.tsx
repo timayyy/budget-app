@@ -7,36 +7,22 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ForwardArrowIcon } from "../../../icons";
-import { useBudgetContext } from "../../../../context/budget-context";
+import { useBudget } from "../../../../hooks/use-budget";
+import { useCreateBudget } from "../../../../hooks/use-create-budget-modal";
 
 type CreateBudgetDrawerFooterProps = {
-  budgetAmount: string | number;
+  formBudgetAmount: string | number;
 };
 
 export function CreateBudgetDrawerFooter({
-  budgetAmount,
+  formBudgetAmount,
 }: CreateBudgetDrawerFooterProps) {
-  const { dispatch } = useBudgetContext();
+  const { maxBudgetAmount } = useBudget();
+  const { createBudget } = useCreateBudget(formBudgetAmount);
 
-  const maxBudget = 999999;
-  const isGreaterThanMax = Number(budgetAmount) > maxBudget;
+  const isGreaterThanMax = Number(formBudgetAmount) > maxBudgetAmount;
+  const disableBtn = !formBudgetAmount || isGreaterThanMax;
 
-  function createBudget() {
-    const newBudget = {
-      id: Math.floor(Math.random() * 100000000),
-      amount: Number(budgetAmount),
-    };
-
-    dispatch({
-      type: "create-budget",
-      payload: newBudget,
-    });
-
-    dispatch({
-      type: "update-create-budget-step",
-      payload: "category",
-    });
-  }
   return (
     <DrawerFooter display="block" px="0">
       <Flex>
@@ -52,7 +38,7 @@ export function CreateBudgetDrawerFooter({
             rightIcon={<ForwardArrowIcon />}
             bg="transparent"
             onClick={createBudget}
-            isDisabled={!budgetAmount || isGreaterThanMax}
+            isDisabled={disableBtn}
           >
             Next
           </Button>

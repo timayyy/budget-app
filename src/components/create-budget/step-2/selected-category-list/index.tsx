@@ -1,13 +1,13 @@
 import { Box, VStack } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../../context/budget-context";
 import { SelectedCategoryItem } from "./selected-category";
+import { useBudgetCategories } from "../../../../hooks/use-budget-categories";
 
 export function SelectedCategoryList() {
-  const { state } = useBudgetContext();
+  const { budgetCategories } = useBudgetCategories();
   return (
     <Box mt="4rem">
       <VStack spacing="2rem" alignItems="initial">
-        {state.budgetCategories.map((category) => (
+        {budgetCategories.map((category) => (
           <SelectedCategoryItem key={category.value} category={category} />
         ))}
       </VStack>

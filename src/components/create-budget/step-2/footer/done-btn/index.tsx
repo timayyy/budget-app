@@ -1,19 +1,17 @@
 import { Box, Button } from "@chakra-ui/react";
 import { ForwardArrowIcon } from "../../../../icons";
-import { useBudgetContext } from "../../../../../context/budget-context";
+import {
+  useToggleCreateBudgetModal,
+  useUpdateCreateBudgetStep,
+} from "../../../../../hooks/use-create-budget-modal";
 
 export function DoneButton() {
-  const { dispatch } = useBudgetContext();
+  const { closeCreateBudgetModal } = useToggleCreateBudgetModal();
+  const { showBudgetForm } = useUpdateCreateBudgetStep();
 
   function handleDone() {
-    dispatch({
-      type: "update-create-budget-step",
-      payload: "budget",
-    });
-    dispatch({
-      type: "show-create-budget-modal",
-      payload: false,
-    });
+    showBudgetForm();
+    closeCreateBudgetModal();
   }
 
   return (

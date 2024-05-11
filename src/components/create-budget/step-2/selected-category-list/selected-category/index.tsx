@@ -9,21 +9,15 @@ import {
 } from "@chakra-ui/react";
 import { MinusIcon } from "../../../../icons";
 import type { CategorySingle } from "../../../../../reducer/budget-reducer/types";
-import { useBudgetContext } from "../../../../../context/budget-context";
+import { useDeleteCategory } from "../../../../../hooks/use-budget-categories";
 
 type SelectedCategoryItemProps = {
   category: CategorySingle;
 };
 
 export function SelectedCategoryItem({ category }: SelectedCategoryItemProps) {
-  const { dispatch } = useBudgetContext();
+  const { deleteCategory } = useDeleteCategory(category.value);
 
-  function deleteCategory() {
-    dispatch({
-      type: "delete-category",
-      payload: category.value,
-    });
-  }
   return (
     <Flex align="center" gap="1rem">
       <Box>

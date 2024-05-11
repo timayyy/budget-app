@@ -1,37 +1,30 @@
 import { IconButton } from "@chakra-ui/react";
 import { BackArrowIcon } from "../../../icons";
-import { useBudgetContext } from "../../../../context/budget-context";
+import {
+  useCurrentCreateBudgetStep,
+  useToggleCreateBudgetModal,
+  useUpdateCreateBudgetStep,
+} from "../../../../hooks/use-create-budget-modal";
 
 export function CreateBudgetBackButton() {
-  const { state, dispatch } = useBudgetContext();
-
-  const isCategoryCurrentStep = state.currentCreateBudgetStep === "category";
-  const isBudgetCurrentStep = state.currentCreateBudgetStep === "budget";
-
-  function closeCreateBudgetModal() {
-    dispatch({
-      type: "show-create-budget-modal",
-      payload: false,
-    });
-  }
+  const { closeCreateBudgetModal } = useToggleCreateBudgetModal();
+  const { showBudgetForm } = useUpdateCreateBudgetStep();
+  const { isCategoryCurrentStep } = useCurrentCreateBudgetStep();
 
   function handleBackArrowClick() {
     if (isCategoryCurrentStep) {
-      dispatch({
-        type: "update-create-budget-step",
-        payload: "budget",
-      });
+      showBudgetForm();
     } else {
       closeCreateBudgetModal();
     }
   }
+
   return (
     <IconButton
       icon={<BackArrowIcon />}
       size="lg"
       aria-label="Go back"
       bg="transparent"
-      disabled={isBudgetCurrentStep}
       onClick={handleBackArrowClick}
     />
   );

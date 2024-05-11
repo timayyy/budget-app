@@ -1,11 +1,11 @@
 import { Text } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../context/budget-context";
+import { useBudget } from "../../../hooks/use-budget";
 
 export function BudgetValue() {
-  const { state } = useBudgetContext();
+  const { budgetAmount } = useBudget();
   return (
     <Text variant="heading-1" noOfLines={1}>
-      ₦{Number(state.budget?.amount).toLocaleString()}
+      ₦{budgetAmount.toLocaleString()}
     </Text>
   );
 }

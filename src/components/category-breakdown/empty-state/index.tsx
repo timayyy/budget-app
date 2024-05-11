@@ -7,24 +7,25 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../context/budget-context";
+import { useBudgetCategories } from "../../../hooks/use-budget-categories";
+import { useBudget } from "../../../hooks/use-budget";
+import {
+  useToggleCreateBudgetModal,
+  useUpdateCreateBudgetStep,
+} from "../../../hooks/use-create-budget-modal";
 
 export function EmptyCategoriesState() {
-  const { state, dispatch } = useBudgetContext();
+  const { budgetCategoriesLength } = useBudgetCategories();
+  const { hasBudget } = useBudget();
+  const { openCreateBudgetModal } = useToggleCreateBudgetModal();
+  const { showCategoryForm } = useUpdateCreateBudgetStep();
 
-  const hasBudgetButNoCategory =
-    state.budget && state.budgetCategories.length < 1;
+  const hasBudgetButNoCategory = hasBudget && budgetCategoriesLength < 1;
 
   function handleBtnClick() {
-    dispatch({
-      type: "show-create-budget-modal",
-      payload: true,
-    });
+    openCreateBudgetModal();
     if (hasBudgetButNoCategory) {
-      dispatch({
-        type: "update-create-budget-step",
-        payload: "category",
-      });
+      showCategoryForm();
     }
   }
   return (

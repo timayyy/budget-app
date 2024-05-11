@@ -1,9 +1,8 @@
 import { Text } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../../context/budget-context";
+import { useCurrentCreateBudgetStep } from "../../../../hooks/use-create-budget-modal";
 
 export function StepCount() {
-  const { state } = useBudgetContext();
-  const isBudgetCurrentStep = state.currentCreateBudgetStep === "budget";
+  const { isBudgetCurrentStep } = useCurrentCreateBudgetStep();
   return (
     <Text variant="sub-heading-1" color="brand.main">
       {isBudgetCurrentStep ? 1 : 2}/2

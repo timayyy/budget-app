@@ -1,23 +1,16 @@
 import { Drawer, DrawerOverlay } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../context/budget-context";
 import { CreateBudgetDrawerContent } from "./drawer-content";
+import { useToggleCreateBudgetModal } from "../../../hooks/use-create-budget-modal";
 
 export type CreateBudgeSteps = "budget" | "category";
 
 export function CreateBudgetDrawer() {
-  const { state, dispatch } = useBudgetContext();
-
-  function closeCreateBudgetModal() {
-    dispatch({
-      type: "show-create-budget-modal",
-      payload: false,
-    });
-  }
-
+  const { closeCreateBudgetModal, isCreateBudgetModalOpen } =
+    useToggleCreateBudgetModal();
   return (
     <Drawer
       size="lg"
-      isOpen={state.isCreateBudgetModalOpen}
+      isOpen={isCreateBudgetModalOpen}
       placement="right"
       onClose={closeCreateBudgetModal}
     >

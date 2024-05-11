@@ -2,10 +2,10 @@ import { DrawerContent } from "@chakra-ui/react";
 import { CreateBudgetDrawerHeader } from "../drawer-header";
 import { CreateBudgetStep1Body } from "../../step-1";
 import { CreateBudgetStep2Body } from "../../step-2";
-import { useBudgetContext } from "../../../../context/budget-context";
+import { useCurrentCreateBudgetStep } from "../../../../hooks/use-create-budget-modal";
 
 export function CreateBudgetDrawerContent() {
-  const { state } = useBudgetContext();
+  const { currentCreateBudgetStep } = useCurrentCreateBudgetStep();
 
   const returnContent = {
     budget: {
@@ -19,7 +19,7 @@ export function CreateBudgetDrawerContent() {
   return (
     <DrawerContent p="3rem">
       <CreateBudgetDrawerHeader />
-      {returnContent[state.currentCreateBudgetStep].body}
+      {returnContent[currentCreateBudgetStep].body}
     </DrawerContent>
   );
 }

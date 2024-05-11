@@ -1,19 +1,17 @@
 import { Text, VStack } from "@chakra-ui/react";
-import { useBudgetContext } from "../../../../context/budget-context";
+import { useBudget } from "../../../../hooks/use-budget";
 
 type StepHeaderProps = {
   subHeading: string;
 };
 
 export function StepHeader({ subHeading }: StepHeaderProps) {
-  const { state } = useBudgetContext();
-
-  const isBudgetCreated = !!state.budget;
+  const { hasBudget } = useBudget();
 
   return (
     <VStack align="initial" spacing="1.6rem">
       <Text as="h1" variant="heading-1" color="brand.main">
-        {isBudgetCreated ? "Edit current budget" : "Create new budget"}
+        {hasBudget ? "Edit current budget" : "Create new budget"}
       </Text>
       <Text variant="body-1" color="brand.gray">
         {subHeading}
